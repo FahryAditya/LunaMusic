@@ -1,0 +1,8 @@
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.1.0 # Untuk koneksi API
+  just_audio: ^0.9.36 # Untuk memutar musik
+  rxdart: ^0.27.7 # Digunakan just_audio untuk stream
+  audio_session: ^0.1.18 # Digunakan just_audio
+  flutter_visualizer: ^1.0.1 # Untuk visualizer
