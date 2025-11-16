@@ -1,0 +1,91 @@
+--
+-- File: luna_music_schema.mysql
+-- Deskripsi: Skema database untuk aplikasi Lunamusic
+--
+-- --------------------------------------------------------
+
+--
+-- Database: `luna_music_db`
+--
+CREATE DATABASE IF NOT EXISTS `luna_music_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `luna_music_db`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(50) NOT NULL UNIQUE,
+  `email` VARCHAR(100) NOT NULL UNIQUE,
+  `password_hash` VARCHAR(255) NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `songs`
+--
+CREATE TABLE IF NOT EXISTS `songs` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(255) NOT NULL,
+  `artist` VARCHAR(100) NOT NULL,
+  `album` VARCHAR(100) DEFAULT NULL,
+  -- Duration in seconds
+  `duration` INT(11) NOT NULL,
+  -- URL to the audio file (e.g., S3 link)
+  `file_url` VARCHAR(255) NOT NULL,
+  -- URL to the album cover image
+  `cover_url` VARCHAR(255) DEFAULT NULL,
+  `uploaded_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `playlists`
+--
+CREATE TABLE IF NOT EXISTS `playlists` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `name` VARCHAR(100) NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `playlist_items`
+--
+CREATE TABLE IF NOT EXISTS `playlist_items` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `playlist_id` INT(11) NOT NULL,
+  `song_id` INT(11) NOT NULL,
+  `added_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_playlist_song_unique` (`playlist_id`, `song_id`),
+  FOREIGN KEY (`playlist_id`) REFERENCES `playlists`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`song_id`) REFERENCES `songs`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `favorites`
+--
+CREATE TABLE IF NOT EXISTS `favorites` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `user_id` INT(11) NOT NULL,
+  `song_id` INT(11) NOT NULL,
+  `favorited_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_user_song_unique` (`user_id`, `song_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`song_id`) REFERENCES `songs`(`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
