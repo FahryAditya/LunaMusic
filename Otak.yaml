@@ -1,7 +1,0 @@
-dependencies:
-  flutter:
-    sdk: flutter
-  on_audio_query: ^2.9.0 # Versi terbaru saat ini
-  just_audio: ^0.9.36   # Versi terbaru saat ini
-  # Tambahkan izin ke AndroidManifest.xml (READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE, RECORD_AUDIO jika di bawah Android 13)
-  # dan konfigurasi for-Android-13 di build.gradle (targetSdkVersion 33 dan implementasi Media Store)
